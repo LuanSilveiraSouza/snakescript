@@ -1,3 +1,7 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 body {
   background-color: #AAA;
   color: black;
@@ -10,4 +14,22 @@ body {
 
 canvas {
   border: solid 5px black;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 600px;
+}
+
+header div {
+  width: 300px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }

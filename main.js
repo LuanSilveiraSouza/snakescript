@@ -1,11 +1,18 @@
 const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
 
+const points = document.getElementById('points');
+
 //GAME VARIABLES
 const tile = 30;
 
+const food = {
+  x: 0,
+  y: 0,
+  color: 'red',
+};
+
 const snake = {
-  size: 3,
   body: [],
   direction: 'right',
   bodyColor: 'blue',
@@ -18,7 +25,7 @@ let won = false;
 
 //CORE METHODS
 startGame();
-const loop = setInterval(update, 200);
+const loop = setInterval(update, 150);
 
 function startGame() {
   snake.size = 3;
@@ -32,6 +39,8 @@ function startGame() {
     snake.body.push(newHead);
   }
 
+  randomizeFood();
+
   won = false;
 
   document.addEventListener('keydown', keyEvent);
@@ -39,6 +48,8 @@ function startGame() {
 
 function update() {
   render();
+
+  points.innerHTML = 'Points: '+ snake.body.length;
 
   newHead = {...snake.body[0]};
   switch(snake.direction) {
@@ -72,9 +83,13 @@ function update() {
       break;
   }
 
-  snake.body.pop();
+  if (newHead.x !== food.x || newHead.y !== food.y) {
+    snake.body.pop();
+  } else {
+    randomizeFood();
+  }
   snake.body.unshift(newHead);
-}
+} 
 
 function render() {
   context.clearRect(0, 0, canvas.width, canvas.height);
@@ -91,6 +106,13 @@ function render() {
     context.lineWidth = 1;
     context.strokeRect(element.x, element.y, tile - 1, tile - 1);
   });
+
+  context.fillStyle = food.color;
+  context.fillRect(food.x, food.y, tile, tile);
+
+  context.fillStyle = 'black';
+  context.lineWidth = 1;
+  context.strokeRect(food.x, food.y, tile - 1, tile - 1);
 }
 
 function keyEvent() {
@@ -106,4 +128,9 @@ function keyEvent() {
   if (event.keyCode == 83 && snake.direction !== 'up') {
     snake.direction = 'down';
   }
+}
+
+function randomizeFood() {
+  food.x = Math.floor(Math.random() * canvas.width / tile) * tile;
+  food.y = Math.floor(Math.random() * canvas.height / tile) * tile;
 }
