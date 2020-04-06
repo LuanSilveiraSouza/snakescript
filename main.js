@@ -18,7 +18,7 @@ let won = false;
 
 //CORE METHODS
 startGame();
-const loop = setInterval(update, 1000);
+const loop = setInterval(update, 200);
 
 function startGame() {
   snake.size = 3;
@@ -33,6 +33,8 @@ function startGame() {
   }
 
   won = false;
+
+  document.addEventListener('keydown', keyEvent);
 }
 
 function update() {
@@ -71,7 +73,6 @@ function update() {
   }
 
   snake.body.pop();
-  
   snake.body.unshift(newHead);
 }
 
@@ -92,4 +93,17 @@ function render() {
   });
 }
 
-
+function keyEvent() {
+  if (event.keyCode == 65 && snake.direction !== 'right') {
+    snake.direction = 'left';
+  }
+  if (event.keyCode == 68 && snake.direction !== 'left') {
+    snake.direction = 'right';
+  }
+  if (event.keyCode == 87 && snake.direction !== 'down') {
+    snake.direction = 'up';
+  }
+  if (event.keyCode == 83 && snake.direction !== 'up') {
+    snake.direction = 'down';
+  }
+}
