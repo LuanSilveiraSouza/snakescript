@@ -12,10 +12,11 @@ const snake = {
   headColor: 'green',
 }
 
+let newHead;
+
 let won = false;
 
 //CORE METHODS
-
 startGame();
 const loop = setInterval(update, 1000);
 
@@ -24,59 +25,57 @@ function startGame() {
   snake.direction = 'right';
   snake.body = [];
   for (let i = 3; i > 0; i--) {
-    snake.body.push({
+    newHead = {
       x: (tile * i),
       y: tile,
-    });
+    }
+    snake.body.push(newHead);
   }
 
   won = false;
 }
 
 function update() {
-  let previousElement;
-  let aux;
-  snake.body.forEach((element, index) => {
-    if (index === 0) {
-      previousElement = element;
-      switch(snake.direction) {
-        case 'right': 
-          if((element.x + tile) === canvas.width) {
-            element.x = 0;
-          } else {
-            element.x += tile;
-          }
-          break;
-        case 'left': 
-          if((element.x) === 0) {
-            element.x = canvas.width - tile;
-          } else {
-            element.x -= tile;
-          }
-          break;
-        case 'up': 
-          if((element.y) === 0) {
-            element.y = canvas.height - tile;
-          } else {
-            element.y -= tile;
-          }
-          break;
-        case 'down': 
-          if((element.y + tile) === canvas.height) {
-            element.y = 0;
-          } else {
-            element.y += tile;
-          }
-          break;
-      }
-    } else{
-      aux = element;
-      element = previousElement;
-      previousElement = aux;
-    }
-  });
-  console.log(snake.body);
+  render();
 
+  newHead = {...snake.body[0]};
+  switch(snake.direction) {
+    case 'right': 
+      if((newHead.x + tile) === canvas.width) {
+        newHead.x = 0;
+      } else {
+        newHead.x += tile;
+      }
+      break;
+    case 'left': 
+      if((newHead.x) === 0) {
+        newHead.x = canvas.width - tile;
+      } else {
+        newHead.x -= tile;
+      }
+      break;
+    case 'up': 
+      if((newHead.y) === 0) {
+        newHead.y = canvas.height - tile;
+      } else {
+        newHead.y -= tile;
+      }
+      break;
+    case 'down': 
+      if((newHead.y + tile) === canvas.height) {
+        newHead.y = 0;
+      } else {
+        newHead.y += tile;
+      }
+      break;
+  }
+
+  snake.body.pop();
+  
+  snake.body.unshift(newHead);
+}
+
+function render() {
   context.clearRect(0, 0, canvas.width, canvas.height);
 
   snake.body.forEach((element, index) => {
